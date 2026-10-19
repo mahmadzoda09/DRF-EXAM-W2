@@ -31,18 +31,6 @@ class MeView(APIView):
         return Response(AccountSerializer(request.user).data)
 
 
-class ChangePasswordView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def post(self, request):
-        serializer = ChangePasswordSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        if not request.user.check_password(serializer.validated_data["old_password"]):
-            return Response({"old_password": ["Incorrect password."]}, status=status.HTTP_400_BAD_REQUEST)
-        request.user.set_password(serializer.validated_data["new_password"])
-        request.user.save()
-        return Response({"detail": "Password changed."})
-
 
 class ProfileListView(generics.ListAPIView):
     queryset = Profile.objects.select_related("user").all()
@@ -90,6 +78,12 @@ class AvatarCreateView(generics.CreateAPIView):
         )
         serializer.save(profile=profile)
 
+class ProfileCreateView(generics.CreateAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 class AvatarDetailView(generics.RetrieveDestroyAPIView):
     queryset = Avatar.objects.select_related("profile", "profile__user").all()

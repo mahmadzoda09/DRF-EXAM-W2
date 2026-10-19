@@ -30,7 +30,8 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "accounts",
     'drf_yasg',
-    'chats'
+    'chats',
+    'groups',
 ]
 
 AUTH_USER_MODEL = "accounts.Account"
@@ -44,8 +45,14 @@ SWAGGER_SETTINGS = {
             "description": "Enter your JWT token as: Bearer <your_access_token>",
         }
     },
+    'USE_SESSION_AUTH' : False,
+    "PERSIST_AUTH" : True,
 }
-
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
