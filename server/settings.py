@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     "django_filters",
     "drf_spectacular",
     "accounts",
-    'drf_yasg'
+    'drf_yasg',
+    'chats'
 ]
 
 AUTH_USER_MODEL = "accounts.Account"
